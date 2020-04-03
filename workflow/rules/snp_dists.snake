@@ -1,0 +1,16 @@
+rule snp_dists:
+	input:
+		aln = "output/masked.aln"
+	output:
+		snpmatstandard = "output/snp_comparison/snp_distances_standard.tsv",
+		snpmatnogaps = "output/snp_comparison/snp_distances_no_gaps.tsv"
+	conda:
+		"../envs/snp_comparisons.yaml"
+	log:
+		"logs/snp_dists.log"
+	shell:
+		"""
+		snp-dists -m {input.aln} > {output.snpmatstandard}
+		snp-sites -cb {input.aln} | snp-dists -m /dev/stdin > {output.snpmatnogaps}
+		"""
+

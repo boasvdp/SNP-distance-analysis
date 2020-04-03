@@ -1,0 +1,438 @@
+[21:34:10] This is snippy 4.4.5
+[21:34:10] Written by Torsten Seemann
+[21:34:10] Obtained from https://github.com/tseemann/snippy
+[21:34:10] Detected operating system: linux
+[21:34:10] Enabling bundled linux tools.
+[21:34:10] Found bwa - /project/vdputten/SNP_pipeline/.snakemake/conda/ea2788ee/bin/bwa
+[21:34:10] Found bcftools - /project/vdputten/SNP_pipeline/.snakemake/conda/ea2788ee/bin/bcftools
+[21:34:10] Found samtools - /project/vdputten/SNP_pipeline/.snakemake/conda/ea2788ee/bin/samtools
+[21:34:10] Found java - /project/vdputten/SNP_pipeline/.snakemake/conda/ea2788ee/bin/java
+[21:34:10] Found snpEff - /project/vdputten/SNP_pipeline/.snakemake/conda/ea2788ee/bin/snpEff
+[21:34:10] Found samclip - /project/vdputten/SNP_pipeline/.snakemake/conda/ea2788ee/bin/samclip
+[21:34:10] Found seqtk - /project/vdputten/SNP_pipeline/.snakemake/conda/ea2788ee/bin/seqtk
+[21:34:10] Found parallel - /project/vdputten/SNP_pipeline/.snakemake/conda/ea2788ee/bin/parallel
+[21:34:10] Found freebayes - /project/vdputten/SNP_pipeline/.snakemake/conda/ea2788ee/bin/freebayes
+[21:34:10] Found freebayes-parallel - /project/vdputten/SNP_pipeline/.snakemake/conda/ea2788ee/bin/freebayes-parallel
+[21:34:10] Found fasta_generate_regions.py - /project/vdputten/SNP_pipeline/.snakemake/conda/ea2788ee/bin/fasta_generate_regions.py
+[21:34:10] Found vcfstreamsort - /project/vdputten/SNP_pipeline/.snakemake/conda/ea2788ee/bin/vcfstreamsort
+[21:34:10] Found vcfuniq - /project/vdputten/SNP_pipeline/.snakemake/conda/ea2788ee/bin/vcfuniq
+[21:34:10] Found vcffirstheader - /project/vdputten/SNP_pipeline/.snakemake/conda/ea2788ee/bin/vcffirstheader
+[21:34:10] Found gzip - /bin/gzip
+[21:34:10] Found vt - /project/vdputten/SNP_pipeline/.snakemake/conda/ea2788ee/bin/vt
+[21:34:11] Found snippy-vcf_to_tab - /project/vdputten/SNP_pipeline/.snakemake/conda/ea2788ee/bin/snippy-vcf_to_tab
+[21:34:11] Found snippy-vcf_report - /project/vdputten/SNP_pipeline/.snakemake/conda/ea2788ee/bin/snippy-vcf_report
+[21:34:11] Checking version: samtools --version is >= 1.7 - ok, have 1.9
+[21:34:11] Checking version: bcftools --version is >= 1.7 - ok, have 1.9
+[21:34:11] Checking version: freebayes --version is >= 1.1 - ok, have 1.3
+[21:34:11] Checking version: java -version is >= 1.8 - ok, have 1.8
+[21:34:11] Checking version: snpEff -version is >= 4.3 - ok, have 4.3
+[21:34:11] Checking version: bwa is >= 7.12 - ok, have 7.17
+[21:34:11] Using reference: /project/vdputten/SNP_pipeline/input/references/ATCC25922.gbk
+[21:34:11] Treating reference as 'genbank' format.
+[21:34:11] Will use 8 CPU cores.
+[21:34:11] Using read file: /project/vdputten/SNP_pipeline/output/trimmed_illumina/strain04_1_trimmed.fastq.gz
+[21:34:11] Using read file: /project/vdputten/SNP_pipeline/output/trimmed_illumina/strain04_2_trimmed.fastq.gz
+[21:34:11] Creating folder: output/snippy_out/strain04
+[21:34:11] Changing working directory: output/snippy_out/strain04
+[21:34:11] Creating reference folder: reference
+[21:34:11] Extracting FASTA and GFF from reference.
+[21:34:13] Wrote 3 sequences to ref.fa
+[21:34:13] Wrote 4914 features to ref.gff
+[21:34:13] Creating reference/snpeff.config
+[21:34:13] Freebayes will process 15 chunks of 352690 bp, 8 chunks at a time.
+[21:34:13] Using BAM RG (Read Group) ID: strain04
+[21:34:13] Running: samtools faidx reference/ref.fa 2>> snps.log
+[21:34:13] Running: bwa index reference/ref.fa 2>> snps.log
+[21:34:15] Running: mkdir -p reference/genomes && cp -f reference/ref.fa reference/genomes/ref.fa 2>> snps.log
+[21:34:16] Running: ln -sf reference/ref.fa . 2>> snps.log
+[21:34:16] Running: ln -sf reference/ref.fa.fai . 2>> snps.log
+[21:34:16] Running: mkdir -p reference/ref && gzip -c reference/ref.gff > reference/ref/genes.gff.gz 2>> snps.log
+[21:34:16] Running: snpEff build -c reference/snpeff.config -dataDir . -gff3 ref 2>> snps.log
+[21:34:20] Running: bwa mem  -Y -M -R '@RG\tID:strain04\tSM:strain04' -t 8 reference/ref.fa /project/vdputten/SNP_pipeline/output/trimmed_illumina/strain04_1_trimmed.fastq.gz /project/vdputten/SNP_pipeline/output/trimmed_illumina/strain04_2_trimmed.fastq.gz | samclip --max 10 --ref reference/ref.fa.fai | samtools sort -n -l 0 -T /scratch --threads 7 -m 571M | samtools fixmate -m - - | samtools sort -l 0 -T /scratch --threads 7 -m 571M | samtools markdup -T /scratch -r -s - - > snps.bam 2>> snps.log
+[M::bwa_idx_load_from_disk] read 0 ALT contigs
+[samclip] samclip 0.4.0 by Torsten Seemann (@torstenseemann)
+[samclip] Loading: reference/ref.fa.fai
+[samclip] Found 3 sequences in reference/ref.fa.fai
+[M::process] read 552938 sequences (80000236 bp)...
+[M::process] read 553210 sequences (80000000 bp)...
+[M::mem_pestat] # candidate unique pairs for (FF, FR, RF, RR): (13, 222485, 15, 16)
+[M::mem_pestat] analyzing insert size distribution for orientation FF...
+[M::mem_pestat] (25, 50, 75) percentile: (35, 76, 3338)
+[M::mem_pestat] low and high boundaries for computing mean and std.dev: (1, 9944)
+[M::mem_pestat] mean and std.dev: (1068.54, 1825.22)
+[M::mem_pestat] low and high boundaries for proper pairs: (1, 13247)
+[M::mem_pestat] analyzing insert size distribution for orientation FR...
+[M::mem_pestat] (25, 50, 75) percentile: (158, 217, 293)
+[M::mem_pestat] low and high boundaries for computing mean and std.dev: (1, 563)
+[M::mem_pestat] mean and std.dev: (231.80, 96.04)
+[M::mem_pestat] low and high boundaries for proper pairs: (1, 698)
+[M::mem_pestat] analyzing insert size distribution for orientation RF...
+[M::mem_pestat] (25, 50, 75) percentile: (102, 718, 3638)
+[M::mem_pestat] low and high boundaries for computing mean and std.dev: (1, 10710)
+[M::mem_pestat] mean and std.dev: (1293.87, 1501.31)
+[M::mem_pestat] low and high boundaries for proper pairs: (1, 14246)
+[M::mem_pestat] analyzing insert size distribution for orientation RR...
+[M::mem_pestat] (25, 50, 75) percentile: (3, 3, 4069)
+[M::mem_pestat] low and high boundaries for computing mean and std.dev: (1, 12201)
+[M::mem_pestat] mean and std.dev: (1752.94, 2441.01)
+[M::mem_pestat] low and high boundaries for proper pairs: (1, 16267)
+[M::mem_pestat] skip orientation FF
+[M::mem_pestat] skip orientation RF
+[M::mem_pestat] skip orientation RR
+[M::mem_process_seqs] Processed 552938 reads in 39.428 CPU sec, 4.906 real sec
+[samclip] Processed 100000 records...
+[samclip] Processed 200000 records...
+[samclip] Processed 300000 records...
+[samclip] Processed 400000 records...
+[samclip] Processed 500000 records...
+[M::process] read 554420 sequences (80000188 bp)...
+[M::mem_pestat] # candidate unique pairs for (FF, FR, RF, RR): (16, 222412, 29, 8)
+[M::mem_pestat] analyzing insert size distribution for orientation FF...
+[M::mem_pestat] (25, 50, 75) percentile: (39, 69, 319)
+[M::mem_pestat] low and high boundaries for computing mean and std.dev: (1, 879)
+[M::mem_pestat] mean and std.dev: (105.77, 95.08)
+[M::mem_pestat] low and high boundaries for proper pairs: (1, 1159)
+[M::mem_pestat] analyzing insert size distribution for orientation FR...
+[M::mem_pestat] (25, 50, 75) percentile: (158, 217, 292)
+[M::mem_pestat] low and high boundaries for computing mean and std.dev: (1, 560)
+[M::mem_pestat] mean and std.dev: (231.27, 95.74)
+[M::mem_pestat] low and high boundaries for proper pairs: (1, 694)
+[M::mem_pestat] analyzing insert size distribution for orientation RF...
+[M::mem_pestat] (25, 50, 75) percentile: (17, 75, 338)
+[M::mem_pestat] low and high boundaries for computing mean and std.dev: (1, 980)
+[M::mem_pestat] mean and std.dev: (164.64, 250.47)
+[M::mem_pestat] low and high boundaries for proper pairs: (1, 1301)
+[M::mem_pestat] skip orientation RR as there are not enough pairs
+[M::mem_pestat] skip orientation FF
+[M::mem_pestat] skip orientation RF
+[M::mem_process_seqs] Processed 553210 reads in 41.060 CPU sec, 4.990 real sec
+[samclip] Processed 600000 records...
+[samclip] Processed 700000 records...
+[samclip] Processed 800000 records...
+[samclip] Processed 900000 records...
+[samclip] Processed 1000000 records...
+[samclip] Processed 1100000 records...
+[M::process] read 554676 sequences (80000036 bp)...
+[M::mem_pestat] # candidate unique pairs for (FF, FR, RF, RR): (11, 222568, 17, 12)
+[M::mem_pestat] analyzing insert size distribution for orientation FF...
+[M::mem_pestat] (25, 50, 75) percentile: (45, 81, 287)
+[M::mem_pestat] low and high boundaries for computing mean and std.dev: (1, 771)
+[M::mem_pestat] mean and std.dev: (110.89, 91.70)
+[M::mem_pestat] low and high boundaries for proper pairs: (1, 1013)
+[M::mem_pestat] analyzing insert size distribution for orientation FR...
+[M::mem_pestat] (25, 50, 75) percentile: (155, 214, 288)
+[M::mem_pestat] low and high boundaries for computing mean and std.dev: (1, 554)
+[M::mem_pestat] mean and std.dev: (228.21, 95.24)
+[M::mem_pestat] low and high boundaries for proper pairs: (1, 687)
+[M::mem_pestat] analyzing insert size distribution for orientation RF...
+[M::mem_pestat] (25, 50, 75) percentile: (73, 231, 350)
+[M::mem_pestat] low and high boundaries for computing mean and std.dev: (1, 904)
+[M::mem_pestat] mean and std.dev: (201.47, 200.72)
+[M::mem_pestat] low and high boundaries for proper pairs: (1, 1181)
+[M::mem_pestat] analyzing insert size distribution for orientation RR...
+[M::mem_pestat] (25, 50, 75) percentile: (3, 4215, 4314)
+[M::mem_pestat] low and high boundaries for computing mean and std.dev: (1, 12936)
+[M::mem_pestat] mean and std.dev: (2450.17, 2637.21)
+[M::mem_pestat] low and high boundaries for proper pairs: (1, 17247)
+[M::mem_pestat] skip orientation FF
+[M::mem_pestat] skip orientation RF
+[M::mem_pestat] skip orientation RR
+[M::mem_process_seqs] Processed 554420 reads in 39.644 CPU sec, 4.843 real sec
+[samclip] Processed 1200000 records...
+[samclip] Processed 1300000 records...
+[samclip] Processed 1400000 records...
+[samclip] Processed 1500000 records...
+[samclip] Processed 1600000 records...
+[M::process] read 555218 sequences (80000148 bp)...
+[M::mem_pestat] # candidate unique pairs for (FF, FR, RF, RR): (11, 223366, 16, 7)
+[M::mem_pestat] analyzing insert size distribution for orientation FF...
+[M::mem_pestat] (25, 50, 75) percentile: (64, 233, 4456)
+[M::mem_pestat] low and high boundaries for computing mean and std.dev: (1, 13240)
+[M::mem_pestat] mean and std.dev: (1627.45, 1938.38)
+[M::mem_pestat] low and high boundaries for proper pairs: (1, 17632)
+[M::mem_pestat] analyzing insert size distribution for orientation FR...
+[M::mem_pestat] (25, 50, 75) percentile: (154, 213, 287)
+[M::mem_pestat] low and high boundaries for computing mean and std.dev: (1, 553)
+[M::mem_pestat] mean and std.dev: (227.47, 94.95)
+[M::mem_pestat] low and high boundaries for proper pairs: (1, 686)
+[M::mem_pestat] analyzing insert size distribution for orientation RF...
+[M::mem_pestat] (25, 50, 75) percentile: (73, 749, 979)
+[M::mem_pestat] low and high boundaries for computing mean and std.dev: (1, 2791)
+[M::mem_pestat] mean and std.dev: (414.29, 400.91)
+[M::mem_pestat] low and high boundaries for proper pairs: (1, 3697)
+[M::mem_pestat] skip orientation RR as there are not enough pairs
+[M::mem_pestat] skip orientation FF
+[M::mem_pestat] skip orientation RF
+[M::mem_process_seqs] Processed 554676 reads in 39.876 CPU sec, 4.912 real sec
+[samclip] Processed 1700000 records...
+[samclip] Processed 1800000 records...
+[samclip] Processed 1900000 records...
+[samclip] Processed 2000000 records...
+[samclip] Processed 2100000 records...
+[samclip] Processed 2200000 records...
+[M::process] read 555054 sequences (80000166 bp)...
+[M::mem_pestat] # candidate unique pairs for (FF, FR, RF, RR): (18, 223110, 15, 6)
+[M::mem_pestat] analyzing insert size distribution for orientation FF...
+[M::mem_pestat] (25, 50, 75) percentile: (108, 217, 4377)
+[M::mem_pestat] low and high boundaries for computing mean and std.dev: (1, 12915)
+[M::mem_pestat] mean and std.dev: (1933.89, 2086.24)
+[M::mem_pestat] low and high boundaries for proper pairs: (1, 17184)
+[M::mem_pestat] analyzing insert size distribution for orientation FR...
+[M::mem_pestat] (25, 50, 75) percentile: (154, 211, 286)
+[M::mem_pestat] low and high boundaries for computing mean and std.dev: (1, 550)
+[M::mem_pestat] mean and std.dev: (226.02, 94.35)
+[M::mem_pestat] low and high boundaries for proper pairs: (1, 682)
+[M::mem_pestat] analyzing insert size distribution for orientation RF...
+[M::mem_pestat] (25, 50, 75) percentile: (70, 174, 1869)
+[M::mem_pestat] low and high boundaries for computing mean and std.dev: (1, 5467)
+[M::mem_pestat] mean and std.dev: (694.07, 1057.31)
+[M::mem_pestat] low and high boundaries for proper pairs: (1, 7266)
+[M::mem_pestat] skip orientation RR as there are not enough pairs
+[M::mem_pestat] skip orientation FF
+[M::mem_pestat] skip orientation RF
+[M::mem_process_seqs] Processed 555218 reads in 40.304 CPU sec, 4.918 real sec
+[samclip] Processed 2300000 records...
+[samclip] Processed 2400000 records...
+[samclip] Processed 2500000 records...
+[samclip] Processed 2600000 records...
+[samclip] Processed 2700000 records...
+[M::process] read 555542 sequences (80000224 bp)...
+[M::mem_pestat] # candidate unique pairs for (FF, FR, RF, RR): (12, 223069, 15, 22)
+[M::mem_pestat] analyzing insert size distribution for orientation FF...
+[M::mem_pestat] (25, 50, 75) percentile: (174, 269, 4236)
+[M::mem_pestat] low and high boundaries for computing mean and std.dev: (1, 12360)
+[M::mem_pestat] mean and std.dev: (1868.67, 2010.19)
+[M::mem_pestat] low and high boundaries for proper pairs: (1, 16422)
+[M::mem_pestat] analyzing insert size distribution for orientation FR...
+[M::mem_pestat] (25, 50, 75) percentile: (154, 213, 288)
+[M::mem_pestat] low and high boundaries for computing mean and std.dev: (1, 556)
+[M::mem_pestat] mean and std.dev: (227.78, 95.58)
+[M::mem_pestat] low and high boundaries for proper pairs: (1, 690)
+[M::mem_pestat] analyzing insert size distribution for orientation RF...
+[M::mem_pestat] (25, 50, 75) percentile: (39, 68, 1194)
+[M::mem_pestat] low and high boundaries for computing mean and std.dev: (1, 3504)
+[M::mem_pestat] mean and std.dev: (291.17, 439.83)
+[M::mem_pestat] low and high boundaries for proper pairs: (1, 4659)
+[M::mem_pestat] analyzing insert size distribution for orientation RR...
+[M::mem_pestat] (25, 50, 75) percentile: (3, 3, 3)
+[M::mem_pestat] low and high boundaries for computing mean and std.dev: (3, 3)
+[M::mem_pestat] mean and std.dev: (3.00, 0.00)
+[M::mem_pestat] low and high boundaries for proper pairs: (3, 3)
+[M::mem_pestat] skip orientation FF
+[M::mem_pestat] skip orientation RF
+[M::mem_pestat] skip orientation RR
+[M::mem_process_seqs] Processed 555054 reads in 41.032 CPU sec, 5.070 real sec
+[samclip] Processed 2800000 records...
+[samclip] Processed 2900000 records...
+[samclip] Processed 3000000 records...
+[samclip] Processed 3100000 records...
+[samclip] Processed 3200000 records...
+[samclip] Processed 3300000 records...
+[M::process] read 555988 sequences (80000056 bp)...
+[M::mem_pestat] # candidate unique pairs for (FF, FR, RF, RR): (11, 223655, 31, 13)
+[M::mem_pestat] analyzing insert size distribution for orientation FF...
+[M::mem_pestat] (25, 50, 75) percentile: (56, 90, 114)
+[M::mem_pestat] low and high boundaries for computing mean and std.dev: (1, 230)
+[M::mem_pestat] mean and std.dev: (81.50, 39.52)
+[M::mem_pestat] low and high boundaries for proper pairs: (1, 288)
+[M::mem_pestat] analyzing insert size distribution for orientation FR...
+[M::mem_pestat] (25, 50, 75) percentile: (153, 211, 286)
+[M::mem_pestat] low and high boundaries for computing mean and std.dev: (1, 552)
+[M::mem_pestat] mean and std.dev: (225.78, 94.62)
+[M::mem_pestat] low and high boundaries for proper pairs: (1, 685)
+[M::mem_pestat] analyzing insert size distribution for orientation RF...
+[M::mem_pestat] (25, 50, 75) percentile: (29, 111, 772)
+[M::mem_pestat] low and high boundaries for computing mean and std.dev: (1, 2258)
+[M::mem_pestat] mean and std.dev: (199.58, 304.37)
+[M::mem_pestat] low and high boundaries for proper pairs: (1, 3001)
+[M::mem_pestat] analyzing insert size distribution for orientation RR...
+[M::mem_pestat] (25, 50, 75) percentile: (3, 226, 4200)
+[M::mem_pestat] low and high boundaries for computing mean and std.dev: (1, 12594)
+[M::mem_pestat] mean and std.dev: (1853.92, 2300.67)
+[M::mem_pestat] low and high boundaries for proper pairs: (1, 16791)
+[M::mem_pestat] skip orientation FF
+[M::mem_pestat] skip orientation RF
+[M::mem_pestat] skip orientation RR
+[M::mem_process_seqs] Processed 555542 reads in 44.160 CPU sec, 5.433 real sec
+[samclip] Processed 3400000 records...
+[samclip] Processed 3500000 records...
+[samclip] Processed 3600000 records...
+[samclip] Processed 3700000 records...
+[samclip] Processed 3800000 records...
+[M::mem_pestat] # candidate unique pairs for (FF, FR, RF, RR): (5, 223584, 18, 17)
+[M::mem_pestat] skip orientation FF as there are not enough pairs
+[M::mem_pestat] analyzing insert size distribution for orientation FR...
+[M::mem_pestat] (25, 50, 75) percentile: (152, 210, 284)
+[M::mem_pestat] low and high boundaries for computing mean and std.dev: (1, 548)
+[M::mem_pestat] mean and std.dev: (224.59, 94.05)
+[M::mem_pestat] low and high boundaries for proper pairs: (1, 680)
+[M::mem_pestat] analyzing insert size distribution for orientation RF...
+[M::mem_pestat] (25, 50, 75) percentile: (22, 207, 249)
+[M::mem_pestat] low and high boundaries for computing mean and std.dev: (1, 703)
+[M::mem_pestat] mean and std.dev: (117.21, 95.59)
+[M::mem_pestat] low and high boundaries for proper pairs: (1, 930)
+[M::mem_pestat] analyzing insert size distribution for orientation RR...
+[M::mem_pestat] (25, 50, 75) percentile: (3, 3, 2475)
+[M::mem_pestat] low and high boundaries for computing mean and std.dev: (1, 7419)
+[M::mem_pestat] mean and std.dev: (1014.82, 1638.44)
+[M::mem_pestat] low and high boundaries for proper pairs: (1, 9891)
+[M::mem_pestat] skip orientation RF
+[M::mem_pestat] skip orientation RR
+[M::process] read 556830 sequences (80000250 bp)...
+[M::mem_process_seqs] Processed 555988 reads in 42.800 CPU sec, 5.739 real sec
+[samclip] Processed 3900000 records...
+[samclip] Processed 4000000 records...
+[samclip] Processed 4100000 records...
+[samclip] Processed 4200000 records...
+[samclip] Processed 4300000 records...
+[samclip] Processed 4400000 records...
+[M::mem_pestat] # candidate unique pairs for (FF, FR, RF, RR): (13, 223717, 15, 11)
+[M::mem_pestat] analyzing insert size distribution for orientation FF...
+[M::mem_pestat] (25, 50, 75) percentile: (27, 72, 220)
+[M::mem_pestat] low and high boundaries for computing mean and std.dev: (1, 606)
+[M::mem_pestat] mean and std.dev: (97.17, 93.93)
+[M::mem_pestat] low and high boundaries for proper pairs: (1, 799)
+[M::mem_pestat] analyzing insert size distribution for orientation FR...
+[M::mem_pestat] (25, 50, 75) percentile: (151, 207, 279)
+[M::mem_pestat] low and high boundaries for computing mean and std.dev: (1, 535)
+[M::mem_pestat] mean and std.dev: (221.39, 92.17)
+[M::mem_pestat] low and high boundaries for proper pairs: (1, 663)
+[M::mem_pestat] analyzing insert size distribution for orientation RF...
+[M::mem_pestat] (25, 50, 75) percentile: (70, 303, 1069)
+[M::mem_pestat] low and high boundaries for computing mean and std.dev: (1, 3067)
+[M::mem_pestat] mean and std.dev: (448.86, 466.03)
+[M::mem_pestat] low and high boundaries for proper pairs: (1, 4066)
+[M::mem_pestat] analyzing insert size distribution for orientation RR...
+[M::mem_pestat] (25, 50, 75) percentile: (3, 3, 3977)
+[M::mem_pestat] low and high boundaries for computing mean and std.dev: (1, 11925)
+[M::mem_pestat] mean and std.dev: (1730.27, 2534.05)
+[M::mem_pestat] low and high boundaries for proper pairs: (1, 15899)
+[M::mem_pestat] skip orientation FF
+[M::mem_pestat] skip orientation RF
+[M::mem_pestat] skip orientation RR
+[M::process] read 530724 sequences (76119802 bp)...
+[M::mem_process_seqs] Processed 556830 reads in 42.364 CPU sec, 5.744 real sec
+[samclip] Processed 4500000 records...
+[samclip] Processed 4600000 records...
+[samclip] Processed 4700000 records...
+[samclip] Processed 4800000 records...
+[samclip] Processed 4900000 records...
+[samclip] Processed 5000000 records...
+[M::mem_pestat] # candidate unique pairs for (FF, FR, RF, RR): (14, 213066, 20, 6)
+[M::mem_pestat] analyzing insert size distribution for orientation FF...
+[M::mem_pestat] (25, 50, 75) percentile: (58, 134, 2972)
+[M::mem_pestat] low and high boundaries for computing mean and std.dev: (1, 8800)
+[M::mem_pestat] mean and std.dev: (1526.29, 2378.17)
+[M::mem_pestat] low and high boundaries for proper pairs: (1, 11714)
+[M::mem_pestat] analyzing insert size distribution for orientation FR...
+[M::mem_pestat] (25, 50, 75) percentile: (150, 206, 278)
+[M::mem_pestat] low and high boundaries for computing mean and std.dev: (1, 534)
+[M::mem_pestat] mean and std.dev: (220.35, 92.03)
+[M::mem_pestat] low and high boundaries for proper pairs: (1, 662)
+[M::mem_pestat] analyzing insert size distribution for orientation RF...
+[M::mem_pestat] (25, 50, 75) percentile: (73, 233, 877)
+[M::mem_pestat] low and high boundaries for computing mean and std.dev: (1, 2485)
+[M::mem_pestat] mean and std.dev: (293.00, 315.09)
+[M::mem_pestat] low and high boundaries for proper pairs: (1, 3289)
+[M::mem_pestat] skip orientation RR as there are not enough pairs
+[M::mem_pestat] skip orientation FF
+[M::mem_pestat] skip orientation RF
+[M::mem_process_seqs] Processed 530724 reads in 40.480 CPU sec, 5.553 real sec
+[samclip] Processed 5100000 records...
+[samclip] Processed 5200000 records...
+[samclip] Processed 5300000 records...
+[samclip] Processed 5400000 records...
+[samclip] Processed 5500000 records...
+[main] Version: 0.7.17-r1188
+[main] CMD: bwa mem -Y -M -R @RG\tID:strain04\tSM:strain04 -t 8 reference/ref.fa /project/vdputten/SNP_pipeline/output/trimmed_illumina/strain04_1_trimmed.fastq.gz /project/vdputten/SNP_pipeline/output/trimmed_illumina/strain04_2_trimmed.fastq.gz
+[main] Real time: 54.937 sec; CPU: 412.672 sec
+[samclip] Total SAM records 5540677, removed 175325, allowed 73264, passed 5365352
+[samclip] Header contained 5 lines
+[samclip] Done.
+[bam_sort_core] merging from 0 files and 7 in-memory blocks...
+[bam_sort_core] merging from 0 files and 7 in-memory blocks...
+[21:36:19] Running: samtools index snps.bam 2>> snps.log
+[21:36:22] Running: fasta_generate_regions.py reference/ref.fa.fai 352690 > reference/ref.txt 2>> snps.log
+[21:36:22] Running: freebayes-parallel reference/ref.txt 8 -p 2 -P 0 -C 10 --min-repeat-entropy 1.5 --strict-vcf -q 13 -m 60 --min-coverage 10 -F 0.05  -f reference/ref.fa snps.bam > snps.raw.vcf 2>> snps.log
+[21:36:57] Running: bcftools view --include 'FMT/GT="1/1" && QUAL>=100 && FMT/DP>=10 && (FMT/AO)/(FMT/DP)>=0' snps.raw.vcf  | vt normalize -r reference/ref.fa - | bcftools annotate --remove '^INFO/TYPE,^INFO/DP,^INFO/RO,^INFO/AO,^INFO/AB,^FORMAT/GT,^FORMAT/DP,^FORMAT/RO,^FORMAT/AO,^FORMAT/QR,^FORMAT/QA,^FORMAT/GL' > snps.filt.vcf 2>> snps.log
+normalize v0.5
+
+options:     input VCF file                                  -
+         [o] output VCF file                                 -
+         [w] sorting window size                             10000
+         [n] no fail on reference inconsistency for non SNPs false
+         [q] quiet                                           false
+         [d] debug                                           false
+         [r] reference FASTA file                            reference/ref.fa
+
+
+stats: biallelic
+          no. left trimmed                      : 75
+          no. right trimmed                     : 335
+          no. left and right trimmed            : 29
+          no. right trimmed and left aligned    : 0
+          no. left aligned                      : 0
+
+       total no. biallelic normalized           : 439
+
+       multiallelic
+          no. left trimmed                      : 0
+          no. right trimmed                     : 0
+          no. left and right trimmed            : 0
+          no. right trimmed and left aligned    : 0
+          no. left aligned                      : 0
+
+       total no. multiallelic normalized        : 0
+
+       total no. variants normalized            : 439
+       total no. variants observed              : 40597
+       total no. reference observed             : 0
+
+Time elapsed: 0.66s
+
+[21:36:58] Running: snpEff ann -noLog -noStats -no-downstream -no-upstream -no-utr -c reference/snpeff.config -dataDir . ref snps.filt.vcf > snps.vcf 2>> snps.log
+[21:37:03] Running: /project/vdputten/SNP_pipeline/.snakemake/conda/ea2788ee/bin/snippy-vcf_to_tab --gff reference/ref.gff --ref reference/ref.fa --vcf snps.vcf > snps.tab 2>> snps.log
+[21:37:07] Running: /project/vdputten/SNP_pipeline/.snakemake/conda/ea2788ee/bin/snippy-vcf_extract_subs snps.filt.vcf > snps.subs.vcf 2>> snps.log
+[21:37:08] Running: bcftools convert -Oz -o snps.vcf.gz snps.vcf 2>> snps.log
+[21:37:09] Running: bcftools index -f snps.vcf.gz 2>> snps.log
+[21:37:09] Running: bcftools consensus -f reference/ref.fa -o snps.consensus.fa snps.vcf.gz 2>> snps.log
+[21:37:10] Running: bcftools convert -Oz -o snps.subs.vcf.gz snps.subs.vcf 2>> snps.log
+[21:37:10] Running: bcftools index -f snps.subs.vcf.gz 2>> snps.log
+[21:37:10] Running: bcftools consensus -f reference/ref.fa -o snps.consensus.subs.fa snps.subs.vcf.gz 2>> snps.log
+[21:37:11] Running: rm -f snps.subs.vcf.gz snps.subs.vcf.gz.csi snps.subs.vcf.gz.tbi 2>> snps.log
+[21:37:11] Generating reference aligned/masked FASTA relative to reference: snps.aligned.fa
+[21:37:34] Marked 1696 heterozygous sites with 'n'
+[21:37:34] Creating extra output files: BED GFF CSV TXT HTML
+[21:37:35] Identified 40597 variants.
+[21:37:35] Deleting: reference/ref.fa.fai
+[21:37:35] Deleting: reference/ref.fa.amb
+[21:37:35] Deleting: reference/ref.fa.ann
+[21:37:35] Deleting: reference/ref.fa.bwt
+[21:37:35] Deleting: reference/ref.fa.pac
+[21:37:35] Deleting: reference/ref.fa.sa
+[21:37:35] Deleting: snps.bam
+[21:37:35] Deleting: snps.bam.bai
+[21:37:35] Deleting: snps.raw.vcf
+[21:37:35] Deleting: snps.vcf.gz.csi
+[21:37:35] Deleting: snps.vcf.gz
+[21:37:35] Deleting: snps.consensus.fa
+[21:37:35] Deleting: snps.consensus.subs.fa
+[21:37:35] Deleting: ref.fa
+[21:37:35] Removing folder: reference/genomes
+[21:37:35] Removing folder: reference/ref
+[21:37:35] Result folder: output/snippy_out/strain04
+[21:37:35] Result files:
+[21:37:35] * output/snippy_out/strain04/snps.aligned.fa
+[21:37:35] * output/snippy_out/strain04/snps.bed
+[21:37:35] * output/snippy_out/strain04/snps.csv
+[21:37:35] * output/snippy_out/strain04/snps.filt.vcf
+[21:37:35] * output/snippy_out/strain04/snps.gff
+[21:37:35] * output/snippy_out/strain04/snps.html
+[21:37:35] * output/snippy_out/strain04/snps.log
+[21:37:35] * output/snippy_out/strain04/snps.subs.vcf
+[21:37:35] * output/snippy_out/strain04/snps.tab
+[21:37:35] * output/snippy_out/strain04/snps.txt
+[21:37:35] * output/snippy_out/strain04/snps.vcf
+[21:37:35] Walltime used: 3 minutes, 25 seconds
+[21:37:35] The Snippy manual is at https://github.com/tseemann/snippy/blob/master/README.md
+[21:37:35] Done.

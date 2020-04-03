@@ -1,0 +1,20 @@
+rule plot_snp_comparisons:
+	input:
+		"output/snp_comparison/snp_comparisons.tsv"
+	output:
+		data = "output/snp_comparison/input_plot_SNP_threshold.tsv",
+		lineplot = "output/snp_comparison/snp_comparisons_thresholds_lineplot.pdf",
+		histo_50 = "output/snp_comparison/snp_comparison_histograms_50_SNPs.pdf",
+		histo_500 = "output/snp_comparison/snp_comparison_histograms_500_SNPs.pdf",
+		histo_all = "output/snp_comparison/snp_comparison_histograms_all_SNPs.pdf"
+	conda:
+		"../envs/snp_comparisons.yaml"
+	log:
+		"logs/plot_snp_comparisons"
+	shell:
+		"""
+		python3 ../scripts/prepare_input_plot_SNP_threshold.py {input} > {output.data} 2>{log}
+		Rscript ../scripts/plot_SNP_threshold_histogram.R {input} {output.histo_50} {output.histo_500} {output.histo_all} 2>&1>>{log}
+		Rscript ../scripts/plot_SNP_threshold_lineplot.R {output.data} {output.lineplot} 2>&1>>{log}
+		"""
+

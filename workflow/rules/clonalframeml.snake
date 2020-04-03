@@ -1,0 +1,21 @@
+rule clonalframeml:
+	input:
+		tree = "output/iqtree_out",
+		aln = "output/snippy-core_out/core.full.aln"
+	output:
+		directory("output/clonalframeml_out")
+	conda:
+		"../envs/clonalframeml.yaml"
+	params:
+		prefix = config["clonalframeml"]["prefix"],
+		iqtreeprefix = config["iqtree"]["prefix"]
+	log:
+		"logs/clonalframeml.log"
+	threads: 16
+	shell:
+		"""
+		mkdir -p {output} && cd {output}
+		ClonalFrameML ../../{input.tree}/{params.iqtreeprefix}.treefile ../../{input.aln} {params.prefix} -show_progress true 2>&1>../../{log}
+		if [ -f {params.prefix}.labelled_tree.newick ]; then echo "CFML output exists"; else exit 1; fi
+		"""
+

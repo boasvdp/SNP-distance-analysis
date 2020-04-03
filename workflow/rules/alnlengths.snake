@@ -1,0 +1,13 @@
+rule alnlengths:
+	input:
+		aln = "output/masked.aln"
+	output:
+		alnlengths = "output/snp_comparison/alnlengths.tsv"
+	log:
+		"logs/alnlengths.log"
+	shell:
+		"""
+		bash ../scripts/download_snp-dists-alnlengths.sh
+		../scripts/snp-dists-alnlengths -l {input.aln} > {output.alnlengths} 2>{log}
+		"""
+

@@ -1,0 +1,5 @@
+slurm-*out
+output
+input/raw_illumina/*gz
+*job
+.snakemake

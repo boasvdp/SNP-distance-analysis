@@ -1,0 +1,25 @@
+general:
+ metadata: "config/metadata.tsv"
+ forward_extension: "_R1.fastq.gz"
+ reverse_extension: "_R2.fastq.gz"
+
+fastp:
+ compression_level: "9"
+ general: "--disable_length_filtering"
+
+snippy:
+ general: "--force --cleanup"
+ reference: "input/references/ATCC25922.gbk"
+
+snippycore:
+ prefix: "TEST"
+
+iqtree:
+ prefix: "TEST"
+
+clonalframeml:
+ prefix: "TEST"
+
+print_carriers:
+ threshold_verylikely: "8"
+ threshold_likely: "17"

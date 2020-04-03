@@ -1,0 +1,19 @@
+rule snippy:
+	input:
+		fw = "output/trimmed_illumina/{sample}_1_trimmed.fastq.gz",
+		rv = "output/trimmed_illumina/{sample}_2_trimmed.fastq.gz",
+		ref = config["snippy"]["reference"]
+	output:
+		directory("output/snippy_out/{sample}")
+	conda:
+		"../envs/snippy.yaml"
+	params:
+		general = config["snippy"]["general"]
+	log:
+		"logs/snippy/{sample}.log"
+	threads: 8
+	shell:
+		"""
+		snippy {params.general} --cpus {threads} --outdir {output} --ref {input.ref} --pe1 {input.fw} --pe2 {input.rv} 2>{log}
+		"""
+

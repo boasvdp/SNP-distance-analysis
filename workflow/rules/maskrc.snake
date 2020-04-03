@@ -1,0 +1,19 @@
+rule maskrc:
+	input:
+		aln = "output/snippy-core_out/core.full.aln",
+		cfml = "output/clonalframeml_out"
+	output:
+		"output/masked.aln"
+	conda:
+		"../envs/maskrc.yaml"
+	params:
+		prefix = config["clonalframeml"]["prefix"]
+	log:
+		"logs/maskrc.log"
+	shell:
+		"""
+		bash ../scripts/download_maskrc.sh
+		cd {input.cfml}
+		python3 ../scripts/maskrc-svg.py --aln ../../{input.aln} --out ../../{output} {params.prefix} 2>&1>../../{log}
+		"""
+

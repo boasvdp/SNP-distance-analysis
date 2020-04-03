@@ -1,0 +1,20 @@
+rule snippycore:
+	input:
+		data = expand("output/snippy_out/{sample}", sample=STRAINS),
+		ref = config["snippy"]["reference"]
+	output:
+		full = "output/snippy-core_out/core.full.aln",
+		snps = "output/snippy-core_out/core.aln"
+	conda:
+		"../envs/snippy.yaml"
+	params:
+		outdir = "output/snippy-core_out"
+	log:
+		"logs/snippycore.log"
+	shell:
+		"""
+		mkdir -p {params.outdir}
+		snippy-core --ref {input.ref} {input.data} 2>&1>{log}
+		mv core.aln core.full.aln core.tab core.vcf core.txt core.ref.fa {params.outdir}
+		"""
+

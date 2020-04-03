@@ -1,0 +1,10 @@
+rule multiqc:
+	input:
+		expand("output/fastp_out/json/{sample}_fastp.json", sample=STRAINS)
+	output:
+		fastp = "output/multiqc_out/multiqc_fastp.html"
+	log:
+		"logs/multiqc_fastp.log"
+	wrapper:
+		"0.50.4/bio/multiqc"		
+

@@ -1,0 +1,17 @@
+rule print_carriers:
+	input:
+		lineplot = "output/snp_comparison/snp_comparisons_thresholds_lineplot.pdf",
+		snpcomparisons = "output/snp_comparison/snp_comparisons.tsv"
+	output:
+		"output/snp_comparison/carrier_persistence_types.tsv"
+	params:
+		threshold_verylikely  =  config["print_carriers"]["threshold_verylikely"],
+		threshold_likely =  config["print_carriers"]["threshold_likely"]
+	conda:
+		"../envs/snp_comparisons.yaml"
+	log:
+		"logs/print_carriers.log"
+	shell:
+		"""
+		python3 scripts/print_carriers.py {params.threshold_verylikely} {params.threshold_likely} {input.snpcomparisons} > {output} 2>{log}
+		"""

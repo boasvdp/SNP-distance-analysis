@@ -13,5 +13,5 @@ rule print_carriers:
 		"logs/print_carriers.log"
 	shell:
 		"""
-		python3 scripts/print_carriers.py {params.threshold_verylikely} {params.threshold_likely} {input.snpcomparisons} > {output} 2>{log}
+		python3 workflow/scripts/print_carriers.py {params.threshold_verylikely} {params.threshold_likely} {input.snpcomparisons} > {output} 2>{log}
 		"""

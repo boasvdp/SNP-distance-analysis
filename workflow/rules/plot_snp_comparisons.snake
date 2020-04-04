@@ -13,8 +13,8 @@ rule plot_snp_comparisons:
 		"logs/plot_snp_comparisons"
 	shell:
 		"""
-		python3 ../scripts/prepare_input_plot_SNP_threshold.py {input} > {output.data} 2>{log}
-		Rscript ../scripts/plot_SNP_threshold_histogram.R {input} {output.histo_50} {output.histo_500} {output.histo_all} 2>&1>>{log}
-		Rscript ../scripts/plot_SNP_threshold_lineplot.R {output.data} {output.lineplot} 2>&1>>{log}
+		python3 workflow/scripts/prepare_input_plot_SNP_threshold.py {input} > {output.data} 2>{log}
+		Rscript workflow/scripts/plot_SNP_threshold_histogram.R {input} {output.histo_50} {output.histo_500} {output.histo_all} 2>&1>>{log}
+		Rscript workflow/scripts/plot_SNP_threshold_lineplot.R {output.data} {output.lineplot} 2>&1>>{log}
 		"""
 

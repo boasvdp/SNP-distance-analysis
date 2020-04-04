@@ -12,8 +12,8 @@ rule maskrc:
 		"logs/maskrc.log"
 	shell:
 		"""
-		bash ../scripts/download_maskrc.sh
+		bash workflow/scripts/download_maskrc.sh
 		cd {input.cfml}
-		python3 ../scripts/maskrc-svg.py --aln ../../{input.aln} --out ../../{output} {params.prefix} 2>&1>../../{log}
+		python3 ../../workflow/scripts/maskrc-svg.py --aln ../../{input.aln} --out ../../{output} {params.prefix} 2>&1>../../{log}
 		"""
 

@@ -7,7 +7,7 @@ rule alnlengths:
 		"logs/alnlengths.log"
 	shell:
 		"""
-		bash ../scripts/download_snp-dists-alnlengths.sh
-		../scripts/snp-dists-alnlengths -l {input.aln} > {output.alnlengths} 2>{log}
+		bash workflow/scripts/download_snp-dists-alnlengths.sh
+		workflow/scripts/snp-dists-alnlengths -l {input.aln} > {output.alnlengths} 2>{log}
 		"""
 

@@ -12,6 +12,6 @@ rule snp_comparisons:
 		"logs/snp_comparisons.log"	
 	shell:
 		"""
-		python3 ../scripts/snp_comparisons.py {input.metadata} {input.snpmatstandard} {input.snpmatnogaps} {input.alnlengths} {output.final} 2>&1>{log}
+		python3 workflow/scripts/snp_comparisons.py {input.metadata} {input.snpmatstandard} {input.snpmatnogaps} {input.alnlengths} {output.final} 2>&1>{log}
 		"""
 

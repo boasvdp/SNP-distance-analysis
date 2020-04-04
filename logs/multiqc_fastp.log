@@ -1,8 +1,0 @@
-[INFO   ]         multiqc : This is MultiQC v1.8
-[INFO   ]         multiqc : Template    : default
-[INFO   ]         multiqc : Searching   : /project/vdputten/SNP_pipeline/output/fastp_out/json
-[INFO   ]           fastp : Found 8 reports
-[INFO   ]         multiqc : Compressing plot data
-[INFO   ]         multiqc : Report      : output/multiqc_out/multiqc_fastp.html
-[INFO   ]         multiqc : Data        : output/multiqc_out/multiqc_fastp_data
-[INFO   ]         multiqc : MultiQC complete
